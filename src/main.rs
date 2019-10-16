@@ -8,7 +8,7 @@ fn main() {
     let mut stdin = stdin.lock();
     let mut line = String::new();
     let mut table_name = String::new();
-    let mut fields = String::new();
+    let mut fields = Vec::new();
     let re = Regex::new(r"^COPY (\w+) \(([\w, ]+)\) FROM stdin;").unwrap();
     let mut insert_mode = false;
     while stdin.read_line(&mut line).unwrap() > 0 {
@@ -17,21 +17,21 @@ fn main() {
                 insert_mode = false;
             }
             else {
-                let mut values = String::new();
+                let mut values = Vec::new();
                 line.pop();
                 for s in line.replace("'", "''").split("\t") {
                     if s == "\\N" {
-                        values += "NULL, ";
+                        values.push("");
                     } else {
-                        values += "'";
-                        values += s;
-                        values += "', ";
+                        values.push(s);
                     }
                 }
                 values.pop();
                 values.pop();
-                println!("INSERT INTO {} ({}) VALUES ({});",
-                         table_name, fields, values);
+                
+                for (pos, e) in fields.iter().enumerate() {
+                    println!("<{}>{}</{}>", e, e, values[pos]);
+                }               
             }
         }
         else {
@@ -39,7 +39,7 @@ fn main() {
                 None => print!("{}", line),
                 Some(caps) => {
                     table_name = String::from(caps.at(1).unwrap());
-                    fields = String::from(caps.at(2).unwrap());
+                    fields = String::from(caps.at(2).unwrap()).split(',');
                     insert_mode = true;
                 },
             };
