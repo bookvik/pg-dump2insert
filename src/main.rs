@@ -45,7 +45,7 @@ fn main() {
                 None => print!("{}", line),
                 Some(caps) => {
                     table_name = String::from(caps.at(1).unwrap());
-                    fields = (caps.at(2).unwrap()).split(',').collect()
+                    fields = String::from(caps.at(2).unwrap()).split(',').collect()
                     insert_mode = true;
                 },
             };
