@@ -12,7 +12,7 @@ fn main() {
     let re = Regex::new(r"^COPY (\w+) \(([\w, ]+)\) FROM stdin;").unwrap();
     let mut insert_mode = false;
     
-    println!("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone="\no\" ?>");
+    println!("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>");
     println!("<root>");
     
     while stdin.read_line(&mut line).unwrap() > 0 {
