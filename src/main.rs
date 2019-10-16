@@ -7,7 +7,6 @@ fn main() {
     let stdin = io::stdin();
     let mut stdin = stdin.lock();
     let mut line = String::new();
-    let mut table_name = String::new();
     let mut fields = Vec::new();
     let re = Regex::new(r"^COPY (\w+) \(([\w, ]+)\) FROM stdin;").unwrap();
     let mut insert_mode = false;
@@ -30,8 +29,8 @@ fn main() {
                         values.push(s);
                     }
                 }
-                values.pop();
-                values.pop();
+                //values.pop();
+                //values.pop();
                 
                 println!("<row>");
                 for (pos, e) in fields.iter().enumerate() {
@@ -39,17 +38,16 @@ fn main() {
                 }               
                 println!("</row>");
             }
-        }
-        else {
+        } else {
             match re.captures(&line) {
                 None => print!("{}", line),
                 Some(caps) => {
-                    table_name = String::from(caps.at(1).unwrap());
                     fields = String::from(caps.at(2).unwrap()).split(',').collect();
                     insert_mode = true;
                 },
             };
         }
+        
         line.clear();
     }
     
