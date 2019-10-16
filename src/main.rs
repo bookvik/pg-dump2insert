@@ -11,6 +11,10 @@ fn main() {
     let mut fields = Vec::new();
     let re = Regex::new(r"^COPY (\w+) \(([\w, ]+)\) FROM stdin;").unwrap();
     let mut insert_mode = false;
+    
+    println!("<?xml version="1.0" encoding="UTF-8" standalone="no" ?>");
+    println!("<root>");
+    
     while stdin.read_line(&mut line).unwrap() > 0 {
         if insert_mode {
             if line == "\\.\n" {
@@ -29,9 +33,11 @@ fn main() {
                 values.pop();
                 values.pop();
                 
+                println!("<row>");
                 for (pos, e) in fields.iter().enumerate() {
                     println!("<{}>{}</{}>", e, e, values[pos]);
                 }               
+                println!("</row>");
             }
         }
         else {
@@ -46,4 +52,6 @@ fn main() {
         }
         line.clear();
     }
+    
+    println!("</root>");
 }
